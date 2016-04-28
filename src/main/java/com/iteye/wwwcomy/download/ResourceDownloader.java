@@ -24,47 +24,59 @@ import com.iteye.wwwcomy.parser.PageResult;
  */
 public class ResourceDownloader {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ResourceDownloader.class);
-	private static final String LOCAL_PATH = "d:/data/download";
+    private static final Logger LOGGER = LoggerFactory.getLogger(ResourceDownloader.class);
+    private static final String LOCAL_PATH = "d:/data/download";
 
-	private static class HOLDER {
-		private static final ResourceDownloader instance = new ResourceDownloader();
-	}
+    private static class HOLDER {
+        private static final ResourceDownloader instance = new ResourceDownloader();
+    }
 
-	private static ResourceDownloader instance = HOLDER.instance;
+    private static ResourceDownloader instance = HOLDER.instance;
 
-	public static ResourceDownloader getInstance() {
-		return instance;
-	}
+    public static ResourceDownloader getInstance() {
+        return instance;
+    }
 
-	public boolean download(String sUrl, String fileName, String localPath) throws Exception {
-		String targetPath = (localPath.endsWith("/") || localPath.endsWith("\\")) ? localPath : (localPath + "/");
-		String suffix = getFileSuffix(sUrl);
-		File targetFile = new File(targetPath + fileName + suffix);
-		URL url = new URL(sUrl);
-		URLConnection conn = url.openConnection();
-		InputStream inStream = conn.getInputStream();
-		FileUtils.writeByteArrayToFile(targetFile, IOUtils.toByteArray(inStream));
-		return true;
-	}
+    /**
+     * 下载文件
+     * 
+     * @param sUrl
+     *            需要下载文件的URL
+     * @param fileName
+     *            保存的文件名
+     * @param localPath
+     *            保存的本地路径
+     * @return
+     * @throws Exception
+     */
+    public boolean download(String sUrl, String fileName, String localPath) throws Exception {
+        String targetPath = (localPath.endsWith("/") || localPath.endsWith("\\")) ? localPath : (localPath + "/");
+        String suffix = getFileSuffix(sUrl);
+        File targetFile = new File(targetPath + fileName + suffix);
+        URL url = new URL(sUrl);
+        URLConnection conn = url.openConnection();
+        InputStream inStream = conn.getInputStream();
+        FileUtils.writeByteArrayToFile(targetFile, IOUtils.toByteArray(inStream));
+        return true;
+    }
 
-	public static String getFileSuffix(String url) {
-		int dotIndex = url.lastIndexOf(".");
-		return url.substring(dotIndex);
-	}
+    public static String getFileSuffix(String url) {
+        int dotIndex = url.lastIndexOf(".");
+        return url.substring(dotIndex);
+    }
 
-	public void download(PageResult result) {
-		List<Map<String, String>> list = result.getResourceList();
-		String folderName = LOCAL_PATH + "/" + result.getResourceName();
-		Iterator<Map<String, String>> i = list.iterator();
-		while (i.hasNext()) {
-			Map<String, String> entry = i.next();
-			try {
-				download(entry.get(Const.RESOURCE_URL), entry.get(Const.TITLE), folderName);
-			} catch (Exception e) {
-				LOGGER.error("Failed to download resource from URL:" + entry.get(Const.RESOURCE_URL), e);
-			}
-		}
+    public void download(PageResult result) {
+        List<Map<String, String>> list = result.getResourceList();
+        String folderName = LOCAL_PATH + "/" + result.getResourceName();
+        Iterator<Map<String, String>> i = list.iterator();
+        while (i.hasNext()) {
+            Map<String, String> entry = i.next();
+            try {
+                download(entry.get(Const.RESOURCE_URL), entry.get(Const.TITLE), folderName);
+            } catch (Exception e) {
+                LOGGER.error("Failed to download resource from URL:" + entry.get(Const.RESOURCE_URL), e);
+            }
+        }
 
-	}
+    }
 }
