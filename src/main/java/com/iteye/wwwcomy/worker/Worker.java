@@ -11,8 +11,6 @@ import com.iteye.wwwcomy.parser.PageResult;
  * 
  */
 public class Worker implements Runnable {
-	// private static final Logger LOGGER =
-	// LoggerFactory.getLogger(Worker.class);
 	private String htmlContent;
 	private ResourceDownloader downloader = ResourceDownloader.getInstance();
 	private HtmlParser parser = HtmlParser.getInstance();
