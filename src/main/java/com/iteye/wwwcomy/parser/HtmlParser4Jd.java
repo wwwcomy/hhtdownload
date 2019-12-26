@@ -37,6 +37,8 @@ public class HtmlParser4Jd {
 	private void getModelAndParamaters(Document doc, PageResult4Jd result) {
 		Elements elements = doc.select("ul.parameter2.p-parameter-list");
 		if (elements.isEmpty()) {
+			result.setModel("NA");
+			result.setPageId("NA");
 			return;
 		}
 		Element ul = elements.get(0);
@@ -45,12 +47,16 @@ public class HtmlParser4Jd {
 		result.setModel(brand);
 		result.setPageId(pageId);
 		for (int i = 2; i < ul.children().size(); i++) {
-			result.getAttributes().put("attribute" + i, ul.child(i).attr("title"));
+			result.getAttributes().put("attribute" + i, ul.child(i).html());
 		}
 	}
 
 	private void getBrand(Document doc, PageResult4Jd result) {
 		Element e = doc.getElementById("parameter-brand");
+		if (null == e || null == e.child(0)) {
+			result.setBrand("NA");
+			return;
+		}
 		String brand = e.child(0).attr("title");
 		result.setBrand(brand);
 	}

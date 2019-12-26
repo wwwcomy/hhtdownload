@@ -1,15 +1,14 @@
 package com.iteye.wwwcomy.crawler;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.iteye.wwwcomy.parser.HtmlParser4Jd;
+import com.iteye.wwwcomy.parser.PageResult4Jd;
 import com.iteye.wwwcomy.util.StringUtil;
-import com.iteye.wwwcomy.worker.Worker;
 
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
@@ -26,8 +25,9 @@ public class Crawler4Jd extends WebCrawler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Crawler4Jd.class);
 
-	private ExecutorService e = new ThreadPoolExecutor(20, 200, 5000L, TimeUnit.MILLISECONDS,
-			new LinkedBlockingQueue<Runnable>(2000));
+	private HtmlParser4Jd parser = HtmlParser4Jd.getInstance();
+
+	private List<PageResult4Jd> resultList = new ArrayList<>();
 
 	/**
 	 * This method receives two parameters. The first parameter is the page in which
@@ -57,19 +57,16 @@ public class Crawler4Jd extends WebCrawler {
 			HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
 			String title = htmlParseData.getTitle();
 			title = StringUtil.toSafePath(title);
-
-			// TODO Use another multi-thread but not multi-crawler thread.
-			new Worker(htmlParseData.getHtml()).run();
-
-			// ThreadPoolUtil.execute(new Worker(htmlParseData.getHtml()));
-			// try {
-			// FileUtils.write(file, htmlParseData.getHtml());
-			// } catch (IOException e) {
-			// LOGGER.error("The content of URL" + url + " cannot be handled!");
-			// LOGGER.error("Data cannot be saved", e);
-			// }
+			LOGGER.info("Title {} being parsed.", title);
+			PageResult4Jd result = parser.parse(htmlParseData.getHtml());
+			result.setPageUrl(url);
+			resultList.add(result);
 		} else {
 			LOGGER.warn("Not a HTML page!!!");
 		}
+	}
+
+	public Object getMyLocalData() {
+		return resultList;
 	}
 }

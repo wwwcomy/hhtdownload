@@ -1,6 +1,13 @@
 package com.iteye.wwwcomy.main;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+import org.apache.commons.io.FileUtils;
+
 import com.iteye.wwwcomy.crawler.Crawler4Jd;
+import com.iteye.wwwcomy.parser.PageResult4Jd;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
@@ -16,16 +23,19 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
  */
 public class Main4Jd {
 	public static void main(String[] args) throws Exception {
-		String crawlStorageFolder = "/data/music";
+		String crawlStorageFolder = "c:/temp";
 		int numberOfCrawlers = 7;
 		int maxDepthOfCrawling = 5;
 
 		CrawlConfig config = new CrawlConfig();
 		config.setCrawlStorageFolder(crawlStorageFolder);
 		config.setMaxDepthOfCrawling(maxDepthOfCrawling);
+		config.setConnectionTimeout(5000);
+		config.setMaxConnectionsPerHost(20);
+		config.setSocketTimeout(5000);
 
-		// int maxPagesToFetch = 2000;
-		// config.setMaxPagesToFetch(maxPagesToFetch);
+		int maxPagesToFetch = 20;
+		config.setMaxPagesToFetch(maxPagesToFetch);
 
 		/*
 		 * Instantiate the controller for this crawl.
@@ -51,5 +61,17 @@ public class Main4Jd {
 		 * reach the line after this only when crawling is finished.
 		 */
 		controller.start(Crawler4Jd.class, numberOfCrawlers);
+		List<Object> results = controller.getCrawlersLocalData();
+		results.forEach(o -> {
+			List<PageResult4Jd> result = (List<PageResult4Jd>) o;
+			File f = new File("c:/temp/test.txt");
+			result.forEach(r -> {
+				try {
+					FileUtils.write(f, r.toString() + "\n", true);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			});
+		});
 	}
 }

@@ -10,6 +10,7 @@ import java.util.Map;
  * 
  */
 public class PageResult4Jd {
+	private String pageUrl;
 	private String pageId;
 	private String model;
 	private String brand;
@@ -79,6 +80,14 @@ public class PageResult4Jd {
 		return "PageResult4Jd [pageId=" + pageId + ", model=" + model + ", brand=" + brand + ", originalPrice="
 				+ originalPrice + ", currentPrice=" + currentPrice + ", saleCount=" + saleCount + ", attributes="
 				+ attributes + "]";
+	}
+
+	public String getPageUrl() {
+		return pageUrl;
+	}
+
+	public void setPageUrl(String pageUrl) {
+		this.pageUrl = pageUrl;
 	}
 
 }
