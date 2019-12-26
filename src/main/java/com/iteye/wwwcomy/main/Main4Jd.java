@@ -22,6 +22,7 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
  * 
  */
 public class Main4Jd {
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws Exception {
 		String crawlStorageFolder = "c:/temp";
 		int numberOfCrawlers = 7;
@@ -34,7 +35,7 @@ public class Main4Jd {
 		config.setMaxConnectionsPerHost(20);
 		config.setSocketTimeout(5000);
 
-		int maxPagesToFetch = 20;
+		int maxPagesToFetch = 50;
 		config.setMaxPagesToFetch(maxPagesToFetch);
 
 		/*
