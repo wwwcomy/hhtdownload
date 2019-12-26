@@ -41,6 +41,10 @@ public class Main4Jd {
 		 * these pages
 		 */
 		controller.addSeed("https://mall.jd.com/index-1000000158.html");
+		controller.addSeed("https://mall.jd.com/view_page-179343709.html");
+		controller.addSeed("https://mall.jd.com/view_page-179344489.html");
+		controller.addSeed("https://mall.jd.com/view_page-179344022.html");
+		controller.addSeed("https://mall.jd.com/view_page-179345309.html");
 
 		/*
 		 * Start the crawl. This is a blocking operation, meaning that your code will
